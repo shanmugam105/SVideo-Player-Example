@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QWX-e4-xOP">
-                                <rect key="frame" x="0.0" y="59" width="393" height="246"/>
+                                <rect key="frame" x="0.0" y="58.999999999999986" width="393" height="245.66666666666663"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="QWX-e4-xOP" secondAttribute="height" multiplier="2:1.25" id="JLx-Hp-rO3"/>
                                 </constraints>
@@ -27,7 +27,7 @@
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Twh-OP-w5J">
-                                <rect key="frame" x="0.0" y="313" width="393" height="505"/>
+                                <rect key="frame" x="0.0" y="312.66666666666674" width="393" height="505.33333333333326"/>
                                 <connections>
                                     <segue destination="7eO-4G-D8r" kind="embed" id="3S5-2A-sum"/>
                                 </connections>
@@ -55,11 +55,11 @@
             <objects>
                 <viewController id="8E3-rc-hIx" customClass="VideoPlayerController" customModule="SVideo_Player_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Tkp-vQ-gF9">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="246"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="245.66666666666666"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SQX-qr-2y5">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="246"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="245.66666666666666"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8JV-mO-sFe">
                                         <rect key="frame" x="185.66666666666666" y="112" width="22" height="22"/>
@@ -76,12 +76,29 @@
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" image="previous_01"/>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:59:00 / 00:12:23" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="01w-HW-U5W">
+                                        <rect key="frame" x="20" y="217.66666666666666" width="149" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="7LU-4r-3c5">
+                                        <rect key="frame" x="18" y="238.66666666666666" width="357" height="4"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="3" id="cPc-PP-Ahi"/>
+                                        </constraints>
+                                    </slider>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.12" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="7LU-4r-3c5" firstAttribute="top" secondItem="01w-HW-U5W" secondAttribute="bottom" id="1vS-EU-R11"/>
+                                    <constraint firstItem="7LU-4r-3c5" firstAttribute="leading" secondItem="01w-HW-U5W" secondAttribute="leading" id="4rx-6U-xv3"/>
+                                    <constraint firstItem="01w-HW-U5W" firstAttribute="leading" secondItem="SQX-qr-2y5" secondAttribute="leading" constant="20" id="I4p-IV-4Ie"/>
                                     <constraint firstItem="iYl-Qa-92N" firstAttribute="centerY" secondItem="SQX-qr-2y5" secondAttribute="centerY" id="JQ6-Ig-QY2"/>
                                     <constraint firstItem="8JV-mO-sFe" firstAttribute="centerY" secondItem="SQX-qr-2y5" secondAttribute="centerY" id="OKh-47-GgR"/>
+                                    <constraint firstItem="7LU-4r-3c5" firstAttribute="centerX" secondItem="SQX-qr-2y5" secondAttribute="centerX" id="Smz-a7-9Gx"/>
                                     <constraint firstItem="DZt-K0-N31" firstAttribute="centerY" secondItem="8JV-mO-sFe" secondAttribute="centerY" id="WsY-yV-fZV"/>
+                                    <constraint firstAttribute="bottom" secondItem="7LU-4r-3c5" secondAttribute="bottom" constant="4" id="hoV-Dj-gX8"/>
                                     <constraint firstItem="8JV-mO-sFe" firstAttribute="centerX" secondItem="SQX-qr-2y5" secondAttribute="centerX" id="j34-SI-wc4"/>
                                     <constraint firstItem="8JV-mO-sFe" firstAttribute="leading" secondItem="DZt-K0-N31" secondAttribute="trailing" constant="75" id="tSy-iL-W7w"/>
                                     <constraint firstItem="8JV-mO-sFe" firstAttribute="centerY" secondItem="SQX-qr-2y5" secondAttribute="centerY" id="yiH-Ck-bS8"/>
@@ -89,6 +106,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="ers-Et-Wkw"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="SQX-qr-2y5" firstAttribute="top" secondItem="Tkp-vQ-gF9" secondAttribute="top" id="TGX-tQ-wfB"/>
@@ -99,22 +117,25 @@
                     </view>
                     <connections>
                         <outlet property="controlButtonContainerView" destination="SQX-qr-2y5" id="3fB-eZ-Ia4"/>
+                        <outlet property="durationLabel" destination="01w-HW-U5W" id="gMR-AN-e88"/>
                         <outlet property="nextButton" destination="iYl-Qa-92N" id="ap7-qY-Wu1"/>
                         <outlet property="playPauseButton" destination="8JV-mO-sFe" id="zVP-gg-nHA"/>
                         <outlet property="previousButton" destination="DZt-K0-N31" id="fl2-Nf-rMT"/>
+                        <outlet property="videoStatusBar" destination="7LU-4r-3c5" id="7Lr-E4-7Gc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CWX-We-wqX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1013" y="-233"/>
+            <point key="canvasLocation" x="1012.9770992366412" y="-233.09859154929578"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="eQo-cG-qwh">
             <objects>
                 <viewController id="7eO-4G-D8r" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bdc-bH-IRm">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="505"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="505.33333333333331"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="989-Ra-aOa"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                 </viewController>
