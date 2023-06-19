@@ -15,6 +15,8 @@ protocol PlayerKitDelegate: AnyObject {
 public final class PlayerKit {
     static let shared: PlayerKit = .init()
     let player: AVPlayer = .init()
+    var totalDuration: CMTime? { self.player.currentItem?.asset.duration }
+    var currentDuration: CMTime? { self.player.currentItem?.currentTime() }
     var playerState: AVPlayer.TimeControlStatus = .waitingToPlayAtSpecifiedRate
     var delegate: PlayerKitDelegate?
     private init() {}
@@ -56,7 +58,8 @@ class VideoPlayerController: UIViewController {
     @IBOutlet private weak var playPauseButton: UIButton!
     @IBOutlet private weak var controlButtonContainerView: UIView!
     // Seek bar
-    @IBOutlet weak var videoStatusBar: UISlider!
+    @IBOutlet private weak var videoStatusBar: UISlider!
+    private var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +74,6 @@ class VideoPlayerController: UIViewController {
     
     private func configureView() {
         playerKit.delegate = self
-        NotificationCenter.default.addObserver(playerKit, selector:#selector(playerKit.playPause),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         videoLayer.videoGravity = .resizeAspectFill
         self.view.layer.addSublayer(videoLayer)
         self.view.isUserInteractionEnabled = true
@@ -88,16 +90,33 @@ class VideoPlayerController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showContainer(false)
         }
+        let sliderGesture = UITapGestureRecognizer(target: self, action: #selector(sliderTappedAction))
+        videoStatusBar.isUserInteractionEnabled = true
+        videoStatusBar.addGestureRecognizer(sliderGesture)
         videoStatusBar.setThumbImage(UIImage(), for: .normal)
         videoStatusBar.maximumTrackTintColor = .white
         videoStatusBar.minimumTrackTintColor = .red
         updateDurationLabel()
+        NotificationCenter.default.addObserver(
+            self,
+            selector:#selector(playerDidFinishPlaying),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: nil
+        )
+    }
+    
+    @objc private func playerDidFinishPlaying(sender: Notification) {
+        timer?.invalidate()
+        timer = nil
+        playPauseButton.setImage(UIImage(named: "replay_01"), for: .normal)
+        playerKit.player.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     private func updateDurationLabel() {
-        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) {[weak self] _ in
-            let totalDuration = self?.playerKit.player.currentItem?.asset.duration
-            let currentDuration = self?.playerKit.player.currentItem?.currentTime()
+        guard timer == nil else { return }
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) {[weak self] _ in
+            let totalDuration = self?.playerKit.totalDuration
+            let currentDuration = self?.playerKit.currentDuration
             if let totalDuration, let currentDuration {
                 let currentDuration = CMTimeGetSeconds(currentDuration)
                 let currentDurationFormated = currentDuration.secondsToHoursMinutesSeconds()
@@ -120,6 +139,25 @@ class VideoPlayerController: UIViewController {
         let progress = Float(currentDuration) / Float(totalDuation)
         videoStatusBar.value = progress
         
+    }
+    
+    @objc private func sliderTappedAction(_ sender: UITapGestureRecognizer) {
+        if let slider = sender.view as? UISlider,
+           let totalDuration = playerKit.totalDuration {
+            if slider.isHighlighted { return }
+            let point = sender.location(in: slider)
+            let percentage = Float(point.x / CGRectGetWidth(slider.bounds))
+            let delta = percentage * (slider.maximumValue - slider.minimumValue)
+            let value = slider.minimumValue + delta
+            slider.setValue(value, animated: true)
+            let currentDuration = CMTimeGetSeconds(totalDuration) * Double(value)
+            let currentCMTime = CMTime(seconds: currentDuration, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+            playerKit.player.seek(to: currentCMTime, toleranceBefore: .zero, toleranceAfter: .zero)
+            if playerKit.currentDuration == playerKit.totalDuration {
+                playPauseButton.setImage(UIImage(named: "replay_01"), for: .normal)
+                playerKit.player.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
+            }
+        }
     }
     
     private func configureControlButtons() {
@@ -145,8 +183,14 @@ class VideoPlayerController: UIViewController {
 
 extension VideoPlayerController: PlayerKitDelegate {
     func player(_ player: AVPlayer, _ state: AVPlayer.TimeControlStatus) {
-        let stateIcon = (state == .paused ? "play_01" : "pause_01")
-        playPauseButton.setImage(UIImage(named: stateIcon), for: .normal)
+        if state == .paused {
+            playPauseButton.setImage(UIImage(named: "play_01"), for: .normal)
+            timer?.invalidate()
+            timer = nil
+        } else {
+            playPauseButton.setImage(UIImage(named: "pause_01"), for: .normal)
+            updateDurationLabel()
+        }
     }
 }
 
@@ -156,7 +200,9 @@ struct PlayerDuation {
     let second: Int
     
     var descriptionShort: String {
-        hour == 0 ? ("\(minute):\(second)") : ("\(hour):\(minute):\(second)")
+        let minute: String = String(format: "%02d", minute)
+        let second: String = String(format: "%02d", second)
+        return hour == 0 ? (minute + ":" + second) : ("\(hour):" + minute + ":" + second)
     }
 }
 
